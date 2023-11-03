@@ -39,20 +39,19 @@ struct ContentView: View {
                         .cornerRadius(10)
                         .border(.red, width: CGFloat(wrongEmail))
                     
-                    Button("Login") {
-                        authenticateUser(email: email)
-                        }
-                    .foregroundColor(.white)
-                    .frame(width: 300, height: 50)
-                    .background(Color.black)
-                    .cornerRadius(10)
-                    
-                    NavigationLink(destination: Text("You are logged in @\(email)"), isActive: $showingLoginScreen) {
-                        EmptyView()
+                    NavigationLink {
+                        // go to main view of app if login is successful
+                        MainView()
+                    } label: {
+                        Text("Login")
+                            .foregroundColor(.white)
+                            .frame(width: 300, height: 50)
+                            .background(Color.black)
+                            .cornerRadius(10)
                     }
                     
                     NavigationLink {
-                        // destination view to navigation to
+                        // go to forgot email view if this is tapped
                         SignUpView()
                     } label: {
                         Text("Forgot email?")
