@@ -16,50 +16,62 @@ struct MainView: View {
     )
     
     var body: some View {
-        Text("ShipTrack")
-            .font(.title)
-            .bold()
-        
-        ZStack {
-            Map(coordinateRegion: $region)
-                .cornerRadius(20)
-                .shadow(radius: 10)
-                .padding()
-            // You can add more styling to make it look like a card
-        }.frame(height: 400)
-        
-        ZStack {
-            List {
-                Section(header: Text("Latest Shipments")) {
-                    HStack {
-                        Text("Shipment 1")
+        VStack(spacing: 0) { // Use VStack to stack views vertically
+            HStack {
+                Text("ShipTrack")
+                    .font(.title)
+                    .bold()
+                Spacer()
+            }.padding()
+            
+            GeometryReader { geometry in // This will fill the space between the header and TabView
+                VStack(spacing: 0) { // No spacing between Map and List
+                    Map(coordinateRegion: $region)
+                        .cornerRadius(20)
+                        .shadow(radius: 10)
+                        .padding()
+                        .frame(height: geometry.size.height / 2) // 50% of the height
+                    
+                    NavigationView {
+                        List {
+                            Section(header: Text("Latest Shipments")) {
+                                NavigationLink(destination: ShipmentDetailView(ShipmentID: 1)) {
+                                    Text("Shipment 1")
+                                }
+                                // ... repeat for other list items
+                            }
+                        }
+                        .cornerRadius(20)
+                        .shadow(radius: 10)
+                        .padding()
                     }
-                    Text("Shipment 2")
-                    Text("Shipment 3")
-                    Text("Shipment 4")
+                    .frame(height: geometry.size.height / 2) // 50% of the height
+                    .accentColor(.black)
                 }
-            }.cornerRadius(20).shadow(radius: 10).padding()
-        }.frame(height: 250)
-        
-        TabView {
-            EmptyView()
-                .badge(2)
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                        .foregroundColor(.black)
-                }
-            EmptyView()
-                .tabItem {
-                    Label("Shipments", systemImage: "shippingbox.fill")
-                        .foregroundColor(.black)
-                }
-            EmptyView()
-                .badge("!")
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                        .foregroundColor(.black)
-                }
+            }
+            
+            TabView {
+                // ... TabView content
+                EmptyView()
+                    .badge(2)
+                    .tabItem {
+                        Label("Home", systemImage: "house.fill")
+                            .foregroundColor(.black)
+                    }
+                EmptyView()
+                    .tabItem {
+                        Label("Shipments", systemImage: "shippingbox.fill")
+                            .foregroundColor(.black)
+                    }
+                EmptyView()
+                    .badge("!")
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                            .foregroundColor(.black)
+                    }
+            }
         }
+        .edgesIgnoringSafeArea(.bottom) // To ensure the TabView can extend into the bottom safe area
     }
 }
 
