@@ -26,22 +26,38 @@ struct MainView: View {
                 .shadow(radius: 10)
                 .padding()
             // You can add more styling to make it look like a card
-        }
+        }.frame(height: 400)
+        
+        ZStack {
+            List {
+                Section(header: Text("Latest Shipments")) {
+                    HStack {
+                        Text("Shipment 1")
+                    }
+                    Text("Shipment 2")
+                    Text("Shipment 3")
+                    Text("Shipment 4")
+                }
+            }.cornerRadius(20).shadow(radius: 10).padding()
+        }.frame(height: 250)
         
         TabView {
             EmptyView()
                 .badge(2)
                 .tabItem {
-                    Label("Received", systemImage: "house.fill")
+                    Label("Home", systemImage: "house.fill")
+                        .foregroundColor(.black)
                 }
             EmptyView()
                 .tabItem {
-                    Label("Sent", systemImage: "map.fill")
+                    Label("Shipments", systemImage: "shippingbox.fill")
+                        .foregroundColor(.black)
                 }
             EmptyView()
                 .badge("!")
                 .tabItem {
-                    Label("Account", systemImage: "gear")
+                    Label("Settings", systemImage: "gear")
+                        .foregroundColor(.black)
                 }
         }
     }
