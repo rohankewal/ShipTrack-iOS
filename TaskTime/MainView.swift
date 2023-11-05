@@ -15,6 +15,9 @@ struct MainView: View {
         span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
     )
     
+    @State private var isMapFullScreen = false
+    @State private var isListFullScreen = false
+    
     var body: some View {
         VStack(spacing: 0) { // Use VStack to stack views vertically
             HStack {
@@ -27,10 +30,23 @@ struct MainView: View {
             GeometryReader { geometry in // This will fill the space between the header and TabView
                 VStack(spacing: 0) { // No spacing between Map and List
                     Map(coordinateRegion: $region)
-                        .cornerRadius(20)
-                        .shadow(radius: 10)
-                        .padding()
-                        .frame(height: geometry.size.height / 2) // 50% of the height
+                        .cornerRadius(isMapFullScreen ? 0 : 20)
+                        .shadow(radius: isMapFullScreen ? 0 : 10)
+                        .padding(isMapFullScreen ? 0 : 16)
+                        .frame(height: isMapFullScreen ? geometry.size.height : geometry.size.height / 2)
+                        .edgesIgnoringSafeArea(isMapFullScreen ? .all : .horizontal)
+                    
+                    Color.clear // Transparent view
+                        .frame(height: isMapFullScreen ? geometry.size.height : geometry.size.height / 2)
+                        .contentShape(Rectangle()) // Make sure the transparent area can receive gestures
+                        .gesture(
+                            LongPressGesture(minimumDuration: 0.5)
+                                .onEnded { _ in
+                                    withAnimation(.easeInOut) {
+                                        isMapFullScreen.toggle()
+                                    }
+                                }
+                        )
                     
                     NavigationView {
                         List {
@@ -45,8 +61,13 @@ struct MainView: View {
                         .shadow(radius: 10)
                         .padding()
                     }
-                    .frame(height: geometry.size.height / 2) // 50% of the height
                     .accentColor(.black)
+                    .frame(height: isListFullScreen ? geometry.size.height : geometry.size.height / 2) // Full screen or half screen based on isMapFullScreen
+                    .onLongPressGesture {
+                        withAnimation(.easeInOut) {
+                            isListFullScreen.toggle() // Toggle between full screen and split view
+                        }
+                    }
                 }
             }
             
